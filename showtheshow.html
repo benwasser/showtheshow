@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
+
+		<style>
+			body {
+				word-break:break-all;
+				font-family: 'Noto Sans', sans-serif;
+				-webkit-font-smoothing: antialiased;
+				margin:0;
+				padding:0;
+				background-color:#2980b9;
+				color:#fff;
+			};
+			h1, h2, h3, h4 {
+				margin:0;
+				padding:0;
+			}
+			h1 {
+				font-size:20px;
+				display:block;
+				float:left;
+				text-align:center;
+				width:60%;
+			}
+			h4 {
+				display:inline-block;
+				margin:0;
+			}
+
+			#controls {
+				font-size:50px;
+				text-align:center;
+				background-color:#2980b9;
+				width:100%;
+			}
+			.inner {
+				width:500px;
+				max-width:100%;
+			    -webkit-box-sizing: border-box;
+			    -moz-box-sizing: border-box;
+			    box-sizing: border-box;
+			    padding:15px;
+			    overflow:hidden;
+			    margin-left:auto;
+			    margin-right:auto;
+			}
+
+			.controlbtns {
+				display:inline-block;
+				width:27%;
+				text-align:center;
+			}
+			i {
+				display:inline-block;
+				text-align:center;
+				cursor:pointer;
+			}
+			i:hover {
+				color:#bdc3c7;
+			}
+			header {
+				margin:0;
+				padding:1px;
+				text-align:center;
+				background-color:#3498db;
+				color:#fff;
+			}
+			#currentlyplaying {
+				margin-top:10px;
+				margin-bottom:10px;
+				display:block;
+				font-size:14px;
+				width:100%;
+			}
+			
+			.showtitle {
+				background-color: #2c3e50;
+				width:94%;
+				padding:3%;
+			}
+			.showcontainer {
+				background-color:#34495e;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				overflow:hidden;
+			}
+			.innershowcontainer {
+				width:94%;
+				padding:3%;
+			}
+			.deldir {
+				font-size:20px;
+				margin-right:10px;
+				display:inline-block;
+			}
+			
+			#voldown {
+				display:block;
+				float:left;
+				margin-left:0px;
+				font-size:40px;
+				width:17%;
+				padding-left:3%;
+			}
+			#volup {
+				display:block;
+				float:right;
+				margin-right:0px;
+				font-size:40px;
+				width:17%;
+				padding-right:3%;
+			}
+			
+			#headerinner {
+				width:500px;
+				max-width:100%;
+			    margin-left:auto;
+			    margin-right:auto;
+				
+			}
+			
+			.playbutton {
+				display:block;
+				float:left;
+				width:8%;
+				font-size:20px;
+			}
+			
+			.downloadbutton {
+				display:block;
+				float:right;
+				width:8%;
+				font-size:20px;
+			}
+			
+			.itemdisplay {
+				width:84%;
+				float:left;
+			}
+			
+			a:link {color:#fff;}
+			a:visited {color:#fff;}
+			a:hover {color:#fff;}
+			a:active {color:#fff;}
+			
+			hr {
+				clear:both;
+				width:100%;
+				border:0;
+				border-bottom:1px solid #2c3e50;
+				height:0px;
+				display:block;
+				padding-top:8px;
+				margin-bottom:10px;
+			}
+		</style>
+		<title>show the show</title>
+	</head>
+	<body>
+		<header>
+			<div id="headerinner">
+				<span id="voldown"><i class="fa fa-volume-down"></i></span>
+				<h1>show the show</h1>
+				<span id="volup"><i class="fa fa-volume-up"></i></span>
+				<div style="clear:both"></div>
+			</div>
+		</header>
+		<div id="controls">
+			<div class="inner">
+				<span id="currentlyplaying">{currentlyplaying}</span>
+				<span class="controlbtns" id="scandown"><i class="fa fa-fast-backward"></i></span> 
+				<span class="controlbtns" id="pause"><i class="fa fa-pause"></i></span> 
+				<span class="controlbtns" id="scanup"><i class="fa fa-fast-forward"></i></span>
+			</div>
+		</div>
+
+		<div class="inner">
+			<div id="filelist">
+			</div>
+		</div>
+	</body>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		var filelist = {filelist};
+		var currently_playing = '{currentlyplaying}';
+
+		$(document).ready(function(){
+			var temphtml = '';
+			var videoExtensions = ['mp4','mkv','avi','mov','ogm'];
+			for (var i = 0; i < filelist.length; i++) {
+				temphtml += '<div class="showcontainer" id="container_' + filelist[i].uuid + '"><div class="showtitle"><h4><span id="del_' + filelist[i].uuid + '" class="deldir"><i class="fa fa-trash-o"></i> </span> ' + filelist[i].displayName + '</h4></div><div class="innershowcontainer">';
+				for (var j = 0; j < filelist[i].children.length; j++) {
+					var tempbtn = '<span id="play_' + filelist[i].children[j].uuid + '" class="playbutton"><i class="fa fa-play"></i></span>';
+					var tempdlbtn = ' <a href="/download/' + filelist[i].children[j].uuid + '" class="downloadbutton"><i class="fa fa-cloud-download"></i></a>';
+					temphtml += tempbtn + '<div class="itemdisplay">' + filelist[i].children[j].displayName + '</div>' + tempdlbtn + (j < filelist[i].children.length - 1 ? '<hr />' : '<div style="clear:both"></div>');
+				}
+				temphtml += '</div></div><br />'
+			}
+		
+			$('#filelist').html(temphtml);
+						
+			$('#volup').on('click', function() {
+				sendMessageToServer('volup')
+			});
+			$('#voldown').on('click', function() {
+				sendMessageToServer('voldown')
+			});
+			$('#pause').on('click', function() {
+				sendMessageToServer('pausetheshow')
+			});
+			$('#stop').on('click', function() {
+				sendMessageToServer('stoptheshow')
+			});
+			$('#scanup').on('click', function() {
+				sendMessageToServer('scanup')
+			});
+			$('#scandown').on('click', function() {
+				sendMessageToServer('scandown')
+			});
+			$('#increasespeed').on('click', function() {
+				sendMessageToServer('increasespeed')
+			});
+			$('#decreasespeed').on('click', function() {
+				sendMessageToServer('decreasespeed')
+			});
+			
+
+			
+			function sendMessageToServer(message){
+				$.ajax({type: 'POST', url: '/' + message,
+					data: JSON.stringify({ }),
+					contentType: 'application/json',
+					timeout:8000,
+					success: function(data) {
+						if (data.status == 202){
+							
+						} else {
+							alert(data.error);
+						}
+					}
+				});
+			}
+			
+			setInterval(function(){
+				$.ajax({type: 'POST', url: '/getcurrent',
+					data: JSON.stringify({ }),
+					contentType: 'application/json',
+					timeout:8000,
+					success: function(data) {
+						if (data.status == 202){
+							currently_playing = data.currently_playing;
+							$('#currentlyplaying').html(currently_playing);
+						} else {
+							alert(data.error);
+						}
+					}
+				});
+			},5000);
+			
+			
+			$('.deldir').on('click', function() {
+				if (confirm('Are you sure you want to delete this folder?')){
+					var tempid = $(this).attr('id').split('_')[1];
+					
+					var fullPath = '';
+					for (var i = 0; i < filelist.length; i++){
+						if (filelist[i].uuid == tempid){
+							fullPath = filelist[i].path;
+						}
+					}
+					console.log('deleting: ' + fullPath)
+					
+					$.ajax({type: 'POST', url: '/deletedir',
+						data: JSON.stringify({
+							path: fullPath,
+						}),
+						contentType: 'application/json',
+						timeout:8000,
+						success: function(data) {
+							if (data.status == 202){
+								$('#container_' + tempid).slideToggle();
+							} else {
+								alert(data.error);
+							}
+						}
+					});
+				};
+			});
+
+			
+			$('.playbutton').on('click', function() {
+				var tempid = $(this).attr('id').split('_')[1];
+				var fullPath = '';
+				for (var i = 0; i < filelist.length; i++){
+					for (var j = 0; j < filelist[i].children.length; j++) {
+						if (filelist[i].children[j].uuid == tempid){
+							fullPath = filelist[i].children[j].path;
+						}
+					}
+				}
+				
+				$.ajax({type: 'POST', url: '/playtheshow',
+					data: JSON.stringify({
+						path: fullPath,
+					}),
+					contentType: 'application/json',
+					timeout:8000,
+					success: function(data) {
+						if (data.status == 202){
+							$('#' + tempid).css('color','blue');
+						} else {
+							alert(data.error);
+						}
+					}
+				});
+			});
+		});
+/*
+	extra buttons if you want them
+	<span class="controlbtns" id="stop"><p><i class="fa fa-stop"></i></span> 
+	<span class="controlbtns" id="decreasespeed"><i class="fa fa-backward"></i></span> 
+	<span class="controlbtns" id="increasespeed"><i class="fa fa-forward"></i></span>
+	<span class="controlbtns" id="voldown"><i class="fa fa-volume-down"></i></span> 
+	<span class="controlbtns" id="volup"><i class="fa fa-volume-up"></i></span>
+*/
+	</script>
+
+</html>
