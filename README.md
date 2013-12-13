@@ -9,13 +9,13 @@ This is a little web remote I built for personal use to control my rpi from my p
 
 Features
 -----------
-*Lists whitelisted files within specified (hardcoded, currently default SABnzbd complete) directory
-*Play, pause, jump, volume adjust
-*Download files from rpi to your device
-*Insecure authentication poorly implemented by a security graduate
+* Lists whitelisted files within specified (hardcoded, currently default SABnzbd complete) directory
+* Play, pause, jump, volume adjust
+* Download files from rpi to your device
+* Insecure authentication poorly implemented by a security graduate
 
 Dependencies
 -----------
-*OMXPlayer (should be preinstalled)
-*Node.js
-*Express
+* OMXPlayer (should be preinstalled)
+* Node.js
+* Express
